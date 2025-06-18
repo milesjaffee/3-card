@@ -2,32 +2,110 @@
 import Image from "next/image";
 import Box from "@/components/box";
 import { useState } from "react";
+import BigCard from "@/components/bigcard";
 
 export default function Home() {
   const [drawn, setDrawn] = useState(false);
-  const [tarotData, setTarotData] = useState<any>(
-    {
-      img: "/tarotback.jpg",
 
-    }
-  );
-  const [magicData, setMagicData] = useState<any>(
+  const [tarotInfo, setTarotInfo] = useState();
+  const [magicInfo, setMagicInfo] = useState();
+  const [playingCardInfo, setPlayingCardInfo] = useState();
+
+  const [bigCards, setBigCards] = useState([
     {
-      img: "/magicback.jpg",
-    }
-  );
-  const [playingData, setPlayingData] = useState<any>(
+      src: "/tarotback.jpg",
+      alt: "Tarot Card",
+      hoveredTransform: "rotate(-15deg) translateY(-20px)",
+      unhoveredTransform: "rotate(-15deg)",
+      width: "290px",
+      zIndex: 0,
+      flipSrc: "",
+      flipAlt: "",
+      flipped: false,
+    },
     {
-      img: "/playingcardback.jpg",
-    }
-  );
+      src: "/magicback.jpg",
+      alt: "Magic Card",
+      hoveredTransform: "translateY(-60px)",
+      unhoveredTransform: "translateY(-40px)",
+      width: "365px",
+      zIndex: 1,
+      flipSrc: "",
+      flipAlt: "",
+      flipped: false,
+    },
+    {
+      src: "/playingcardback.jpg",
+      alt: "Playing Card",
+      hoveredTransform: "rotate(15deg) translateY(-20px)",
+      unhoveredTransform: "rotate(15deg)",
+      width: "355px",
+      zIndex: 2,
+      flipSrc: "",
+      flipAlt: "",
+      flipped: false,
+    },
+  ]);
 
   const handleDraw = () => {
-    setDrawn(!drawn);
+    if (!drawn) {
 
-    if (drawn) {
+      // Fetch tarot card info
+      fetch("https://tarotapi.dev/api/v1/cards/random?n=1")
+        .then((response) => response.json())
+        .then((data) => {
+          setTarotInfo(data.cards[0]);
+          setBigCards((prevCards) => {
+            const updatedCards = [...prevCards];
+            const flipUrl = `https://www.sacred-texts.com/tarot/pkt/img/${data.cards[0].name_short}.jpg`;
+            updatedCards[0] = {
+              ...updatedCards[0],
+              flipSrc: flipUrl,
+              flipAlt: data.cards[0].name,
+            };
+            return updatedCards;
+          });
+        });
+
+      // Fetch magic card info
+      fetch("https://api.scryfall.com/cards/random")
+        .then((response) => response.json())
+        .then((data) => {
+          setMagicInfo(data);
+          setBigCards((prevCards) => {
+            const updatedCards = [...prevCards];
+            const flipUrl = data.image_uris?.normal || data.image_uris?.large || data.image_uris?.png;
+            updatedCards[1] = {
+              ...updatedCards[1],
+              flipSrc: flipUrl,
+              flipAlt: data.name,
+            };
+            return updatedCards;
+          });
+        });
+
+      // Fetch playing card info
+      fetch("https://deckofcardsapi.com/api/deck/new/draw/?count=1")
+        .then((response) => response.json())
+        .then((data) => {
+          setPlayingCardInfo(data.cards[0]);
+          setBigCards((prevCards) => {
+            const updatedCards = [...prevCards];
+            const flipUrl = `https://deckofcardsapi.com/static/img/${data.cards[0].code}.png`;
+            updatedCards[2] = {
+              ...updatedCards[2],
+              flipSrc: flipUrl,
+              flipAlt: `${data.cards[0].value} of ${data.cards[0].suit}`,
+            };
+            return updatedCards;
+          });
+
+        });
       
     }
+    setDrawn(!drawn);
+
+    
   };
 
 
@@ -57,84 +135,23 @@ export default function Home() {
 
         {drawn && <Box>
             <div className="flex flex-row items-center justify-center relative">
-              <div
-              className="relative transition-transform duration-300"
-              style={{
-                height: "500px",
-                width: "300px",
-                transform: "rotate(-15deg)",
-                zIndex: 0,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.zIndex = "3";
-                e.currentTarget.style.transform = "rotate(-15deg) translateY(-20px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.zIndex = "0";
-                e.currentTarget.style.transform = "rotate(-15deg)";
-              }}
-              >
-              <Image
-                className="rounded-lg shadow-lg"
-                src={tarotData.img}
-                alt="Tarot Card"
-                fill
-                style={{ objectFit: "contain" }}
-                unoptimized
-              />
-              </div>
-              <div
-              className="relative transition-transform duration-300"
-              style={{
-                height: "500px",
-                width: "350px",
-                transform: "translateY(-40px)",
-                zIndex: 1,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.zIndex = "3";
-                e.currentTarget.style.transform = "translateY(-60px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.zIndex = "1";
-                e.currentTarget.style.transform = "translateY(-40px)";
-              }}
-              >
-              <Image
-                className="rounded-lg shadow-lg"
-                src={magicData.img}
-                alt="Magic Card"
-                fill
-                style={{ objectFit: "contain" }}
-                unoptimized
-              />
-              </div>
-              <div
-              className="relative transition-transform duration-300"
-              style={{
-                height: "500px",
-                width: "350px",
-                transform: "rotate(15deg)",
-                zIndex: 2,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.zIndex = "3";
-                e.currentTarget.style.transform = "rotate(15deg) translateY(-20px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.zIndex = "2";
-                e.currentTarget.style.transform = "rotate(15deg)";
-              }}
-              >
-              <Image
-                className="rounded-lg shadow-lg"
-                src={playingData.img}
-                alt="Playing Card"
-                fill
-                style={{ objectFit: "contain" }}
-                unoptimized
-              />
-              </div>
+
+              {bigCards.map((card, index) => (
+                <BigCard
+                  key={index}
+                  src={card.src}
+                  alt={card.alt}
+                  hoveredTransform={card.hoveredTransform}
+                  unhoveredTransform={card.unhoveredTransform}
+                  width={card.width}
+                  zIndex={card.zIndex}
+                  flipSrc={card.flipSrc}
+                  flipAlt={card.flipAlt}
+                  flipped={card.flipped}
+                  
+                />
+              ))}
+
             </div>
 
 
