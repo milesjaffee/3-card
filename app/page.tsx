@@ -7,9 +7,31 @@ import BigCard from "@/components/bigcard";
 export default function Home() {
   const [drawn, setDrawn] = useState(false);
 
-  const [tarotInfo, setTarotInfo] = useState();
-  const [magicInfo, setMagicInfo] = useState();
-  const [playingCardInfo, setPlayingCardInfo] = useState();
+  const [tarotInfo, setTarotInfo] = useState({
+    image: "/tarotback.jpg",
+    alt: "Tarot card back",
+    name: "Tarot Card",
+    description: "A mystical tarot card drawn from the venerable Rider-Waite-Smith deck.",
+  });
+  const [magicInfo, setMagicInfo] = useState({
+    image: "/magicback.jpg",
+    alt: "Magic card back",
+    name: "Magic Card",
+    description: "A random card from the many worlds of Magic: The Gathering. (Note: I am not associated with Wizards of the Coast. Data provided from Scryfall in accordance with Wizards' Fan Content Policy.)",
+  });
+  const [playingCardInfo, setPlayingCardInfo] = useState({
+    image: "/playingcardback.jpg",
+    alt: "Playing card back",
+    name: "Playing Card",
+    description: "A playing card drawn from a standard deck.",
+  });
+
+  const [currentInfo, setCurrentInfo] = useState({
+    image: "/playingcardback.jpg",
+    alt: "Card back",
+    name: "",
+    description: "",
+  });
 
   const [bigCards, setBigCards] = useState([
     {
@@ -17,7 +39,7 @@ export default function Home() {
       alt: "Tarot Card",
       hoveredTransform: "rotate(-15deg) translateY(-20px)",
       unhoveredTransform: "rotate(-15deg)",
-      width: "290px",
+      width: "245px",
       zIndex: 0,
       flipSrc: "",
       flipAlt: "",
@@ -28,7 +50,7 @@ export default function Home() {
       alt: "Magic Card",
       hoveredTransform: "translateY(-60px)",
       unhoveredTransform: "translateY(-40px)",
-      width: "365px",
+      width: "293px",
       zIndex: 1,
       flipSrc: "",
       flipAlt: "",
@@ -39,7 +61,7 @@ export default function Home() {
       alt: "Playing Card",
       hoveredTransform: "rotate(15deg) translateY(-20px)",
       unhoveredTransform: "rotate(15deg)",
-      width: "355px",
+      width: "285px",
       zIndex: 2,
       flipSrc: "",
       flipAlt: "",
@@ -54,7 +76,12 @@ export default function Home() {
       fetch("https://tarotapi.dev/api/v1/cards/random?n=1")
         .then((response) => response.json())
         .then((data) => {
-          setTarotInfo(data.cards[0]);
+          setTarotInfo({
+            image: `https://www.sacred-texts.com/tarot/pkt/img/${data.cards[0].name_short}.jpg`,
+            alt: data.cards[0].name,
+            name: data.cards[0].name,
+            description: data.cards[0].desc + "Upright:" + data.cards[0].meaning_up + " // Reversed: " + data.cards[0].meaning_rev,
+          });
           setBigCards((prevCards) => {
             const updatedCards = [...prevCards];
             const flipUrl = `https://www.sacred-texts.com/tarot/pkt/img/${data.cards[0].name_short}.jpg`;
@@ -71,7 +98,12 @@ export default function Home() {
       fetch("https://api.scryfall.com/cards/random")
         .then((response) => response.json())
         .then((data) => {
-          setMagicInfo(data);
+          setMagicInfo({
+            image: data.image_uris?.normal || data.image_uris?.large || data.image_uris?.png || "/magicback.jpg",
+            alt: data.name,
+            name: data.name,
+            description: data.oracle_text + " From the set "+ data.set_name + " (" + data.set.toUpperCase() + "), released " + data.released_at,
+          });
           setBigCards((prevCards) => {
             const updatedCards = [...prevCards];
             const flipUrl = data.image_uris?.normal || data.image_uris?.large || data.image_uris?.png;
@@ -88,7 +120,12 @@ export default function Home() {
       fetch("https://deckofcardsapi.com/api/deck/new/draw/?count=1")
         .then((response) => response.json())
         .then((data) => {
-          setPlayingCardInfo(data.cards[0]);
+          setPlayingCardInfo({
+            image: `https://deckofcardsapi.com/static/img/${data.cards[0].code}.png`,
+            alt: `${data.cards[0].value} of ${data.cards[0].suit}`,
+            name: `${data.cards[0].value} of ${data.cards[0].suit}`,
+            description: `The ${data.cards[0].value} of ${data.cards[0].suit}.`,
+          });
           setBigCards((prevCards) => {
             const updatedCards = [...prevCards];
             const flipUrl = `https://deckofcardsapi.com/static/img/${data.cards[0].code}.png`;
@@ -110,9 +147,9 @@ export default function Home() {
 
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-10 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <h1 className="text-4xl sm:text-6xl font-bold text-center sm:text-left">Three Cards</h1>
-      <main className="flex flex-col gap-[32px] align-items-center">
+      <main className="flex flex-col gap-[32px] mb-20 pb-20 align-items-center">
         
         <div className=" items-center align-items-center justify-center gap-4">
         <div
@@ -122,7 +159,6 @@ export default function Home() {
             }}
           >
             <Image
-              className="dark:invert"
               src="/vercel.svg"
               alt="Vercel logomark"
               width={20}
@@ -134,7 +170,7 @@ export default function Home() {
           </div>
 
         {drawn && <Box>
-            <div className="flex flex-row items-center justify-center relative">
+            <div className="flex flex-row items-center justify-center relative mb-10">
 
               {bigCards.map((card, index) => (
                 <BigCard
@@ -156,7 +192,31 @@ export default function Home() {
 
 
 
-        </Box>}
+        </Box>
+        } 
+          {
+            drawn && currentInfo.name && <Box>
+              <h1 className="text-4xl sm:text-4xl mt-10 font-bold text-center sm:text-left">{currentInfo.name}</h1>
+              <div className="flex flex-row items-center justify-center relative">
+                <BigCard
+                  src={currentInfo.image}
+                  alt={currentInfo.alt}
+                  hoveredTransform="translateY(-20px)"
+                  unhoveredTransform="translateY(0px)"
+                  width="290"
+                  zIndex={2}
+                  flipSrc={currentInfo.image}
+                  flipAlt={currentInfo.alt}
+                  flipped={true}
+                  
+                />
+
+                <p>{currentInfo.description}</p>
+
+              </div>
+            </Box>
+          
+        }
       </main>
       
     </div>

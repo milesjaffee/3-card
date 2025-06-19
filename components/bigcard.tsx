@@ -39,7 +39,7 @@ export default class BigCard extends React.Component<BigCardProps, BigCardState>
 
     handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
-        this.setState(prevState => ({ flipped: !prevState.flipped }));
+        this.setState(prevState => ({ flipped: true }));
     };
 
     render() {
@@ -49,7 +49,7 @@ export default class BigCard extends React.Component<BigCardProps, BigCardState>
             <div
                 className="relative transition-transform duration-300"
                 style={{
-                    height: "500px",
+                    height: "400px",
                     width: width,
                     transform: unhoveredTransform,
                     zIndex: 0,
@@ -63,22 +63,25 @@ export default class BigCard extends React.Component<BigCardProps, BigCardState>
                     isFlipped={this.state.flipped}
                     flipDirection="horizontal"
                     containerStyle={{ width: "100%", height: "100%" }}>
-                <Image
-                    className="rounded-lg shadow-lg"
-                    src={src}
-                    alt={alt}
-                    fill
-                    style={{ objectFit: "contain", borderRadius: "25px" }}
-                    unoptimized
-                />
-                <Image
-                    className="rounded-lg shadow-lg"
-                    src={flipSrc || src}
-                    alt={flipAlt || alt}
-                    fill
-                    style={{ objectFit: "contain", borderRadius: "25px" }}
-                    unoptimized
-                />
+
+                    <Image //front
+                        className="rounded-lg shadow-lg"
+                        src={src}
+                        alt={alt}
+                        fill
+                        style={{ objectFit: "contain", borderRadius: "25px" }}
+                        unoptimized
+                    />
+
+                    <Image //back
+                        className="rounded-lg shadow-lg"
+                        src={flipSrc || src}
+                        alt={flipAlt || alt}
+                        fill
+                        style={{ objectFit: "contain", borderRadius: "25px" }}
+                        unoptimized
+                    />
+
                 </ReactCardFlip>
             </div>
         );

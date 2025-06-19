@@ -1,36 +1,23 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 3-card
 
-## Getting Started
+Accesses a tarot card, a Magic: The Gathering card (*this app is not in any way associated with Wizards of the Coast, LLC - this falls under their fan content policy!*), and a playing card.
 
-First, run the development server:
+This is a productivity/creativity tool, comparable to Brian Eno's [Oblique Strategies](https://stoney.sb.org/eno/oblique.html). Its purpose is to help you see a creative and/or problem-solving task in a new way. The idea is that, much like with regular tarot cards, having to read into the mysterious signs will help you bring out what you always had the capacity for.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Possible uses
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+* Subjects for a free-association writing/drawing/acting/improv/etc warmup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+* Where you've been at beforehand, where you need to go towards, and the sharpness of the change needed
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+* In terms of a fictional character, self-image, backstory, and social status
 
-## Learn More
+* Past, future, distance between past and future
 
-To learn more about Next.js, take a look at the following resources:
+* Single tarot card pull, "and oh those two other cards are there too"
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* Cure for decision paralysis or writer's block
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+* Your own idiosyncratic use case!
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This code is provided under the MIT License.
