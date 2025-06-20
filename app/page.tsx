@@ -13,36 +13,48 @@ export default function Home() {
     alt: "Tarot card back",
     name: "Tarot Card",
     description: "A mystical tarot card drawn from the venerable Rider-Waite-Smith deck.",
+    desc2: "",
+    desc3: "",
     },
     front: {
       image: "/playingcardback.jpg",
       alt: "Card back",
       name: "",
       description: "",
+      desc2: "",
+      desc3: "",
     }});
   const [magicInfo, setMagicInfo] = useState({
     back: {image: "/magicback.jpg",
     alt: "Magic card back",
     name: "Magic Card",
-    description: "A random card from the many worlds of Magic: The Gathering. (Note: I am not associated with Wizards of the Coast. Data provided from Scryfall in accordance with Wizards' Fan Content Policy.)",
+    description: "A random card from the many worlds of Magic: The Gathering.",
+    desc2: "Note: I am not associated with Wizards of the Coast. Data provided from Scryfall in accordance with Wizards' Fan Content Policy.",
+    desc3: "",
   },
   front: {
     image: "/playingcardback.jpg",
     alt: "Card back",
     name: "",
     description: "",
+    desc2: "",
+    desc3: "",
   }});
   const [playingCardInfo, setPlayingCardInfo] = useState({
     back: {image: "/playingcardback.jpg",
     alt: "Playing card back",
     name: "Playing Card",
     description: "A playing card drawn from a standard deck.",
+    desc2: "",
+    desc3: "",
   },
   front: {
     image: "/playingcardback.jpg",
     alt: "Card back",
     name: "",
     description: "",
+    desc2: "",
+    desc3: "",
   }});
 
   const [currentInfo, setCurrentInfo] = useState({
@@ -50,6 +62,8 @@ export default function Home() {
     alt: "Card back",
     name: "",
     description: "",
+    desc2: "",
+    desc3: "",
   });
 
   const [bigCards, setBigCards] = useState([
@@ -101,7 +115,9 @@ export default function Home() {
               image: `https://www.sacred-texts.com/tarot/pkt/img/${data.cards[0].name_short}.jpg`,
               alt: data.cards[0].name,
               name: data.cards[0].name,
-              description: "Upright: " + data.cards[0].meaning_up + "\n\nReversed: " + data.cards[0].meaning_rev + " Description: " + data.cards[0].desc,
+              description: "Upright: " + data.cards[0].meaning_up,
+              desc2: "Reversed: " + data.cards[0].meaning_rev,
+              desc3: "Description: " + data.cards[0].desc,
             },
           });
           setBigCards((prevCards) => {
@@ -124,7 +140,9 @@ export default function Home() {
             image: data.image_uris?.normal || data.image_uris?.large || data.image_uris?.png || "/magicback.jpg",
             alt: data.name,
             name: data.name,
-            description: data.type_line + "\n" + data.oracle_text + "\n\nFrom the set "+ data.set_name + " (" + data.set.toUpperCase() + "), released " + data.released_at,
+            description: data.type_line,
+            desc2: data.oracle_text,
+            desc3: "* From the set "+ data.set_name + " (" + data.set.toUpperCase() + "), released " + data.released_at,
           }});
           setBigCards((prevCards) => {
             const updatedCards = [...prevCards];
@@ -239,21 +257,31 @@ export default function Home() {
           { //currently hovered card infobox
             drawn && currentInfo.name && <Box>
               <h1 className="text-4xl sm:text-4xl mt-10 font-bold text-center sm:text-left">{currentInfo.name}</h1>
-              <div className="flex flex-row items-center justify-center gap-10 p-20">
-                <BigCard
-                  src={currentInfo.image}
-                  alt={currentInfo.alt}
-                  hoveredTransform="translateY(-20px)"
-                  unhoveredTransform=""
-                  width="280px"
-                  zIndex={10}
-                  flipSrc={currentInfo.image}
-                  flipAlt={currentInfo.alt}
-                  flipped={true}
-                  
-                />
+              <div className="flex flex-row justify-left gap-10 p-20">
+                
+                
+                  <BigCard 
+                    src={currentInfo.image}
+                    alt={currentInfo.alt}
+                    hoveredTransform="translateY(-20px)"
+                    unhoveredTransform=""
+                    width="100%"
+                    zIndex={10}
+                    flipSrc={currentInfo.image}
+                    flipAlt={currentInfo.alt}
+                    flipped={true}
+                    
+                  />
+              
 
-                <p>{currentInfo.description}</p>
+                <div className="flex-col" style={{width: '100%'}}>
+                  <p className="text-xl font-bold">{currentInfo.description}</p>
+                  <p> </p>
+                  {currentInfo.desc2 && <p className="text-xl">{currentInfo.desc2}</p>}
+                  <p> </p>
+                  {currentInfo.desc3 && <p className="text-xl">{currentInfo.desc3}</p>}
+
+                </div>
 
               </div>
             </Box>
