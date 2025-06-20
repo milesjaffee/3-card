@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
-import Box from "@/components/box";
+import Box from "@/app/components/box";
 import { useState } from "react";
-import BigCard from "@/components/bigcard";
+import BigCard from "@/app/components/bigcard";
 
 export default function Home() {
   const [drawn, setDrawn] = useState(false);
