@@ -67,8 +67,8 @@ export default function Home() {
     {
       src: "/magicback.jpg",
       alt: "Magic Card",
-      hoveredTransform: "translateY(-60px)",
-      unhoveredTransform: "translateY(-40px)",
+      hoveredTransform: "translateY(-55px)",
+      unhoveredTransform: "translateY(-35px)",
       width: "293px",
       zIndex: 1,
       flipSrc: "",
@@ -101,7 +101,7 @@ export default function Home() {
               image: `https://www.sacred-texts.com/tarot/pkt/img/${data.cards[0].name_short}.jpg`,
               alt: data.cards[0].name,
               name: data.cards[0].name,
-              description: data.cards[0].desc + "\n\nUpright: " + data.cards[0].meaning_up + "\n\nReversed: " + data.cards[0].meaning_rev,
+              description: "Upright: " + data.cards[0].meaning_up + "\n\nReversed: " + data.cards[0].meaning_rev + " Description: " + data.cards[0].desc,
             },
           });
           setBigCards((prevCards) => {
@@ -239,24 +239,18 @@ export default function Home() {
           { //currently hovered card infobox
             drawn && currentInfo.name && <Box>
               <h1 className="text-4xl sm:text-4xl mt-10 font-bold text-center sm:text-left">{currentInfo.name}</h1>
-              <div className="flex flex-row items-center justify-center relative">
+              <div className="flex flex-row items-center justify-center gap-10 p-20">
                 <BigCard
                   src={currentInfo.image}
                   alt={currentInfo.alt}
                   hoveredTransform="translateY(-20px)"
                   unhoveredTransform=""
-                  width="290"
+                  width="280px"
                   zIndex={10}
                   flipSrc={currentInfo.image}
                   flipAlt={currentInfo.alt}
                   flipped={true}
                   
-                />
-                <Image 
-                src={currentInfo.image}
-                height="400"
-                width="290"
-                alt={currentInfo.alt}
                 />
 
                 <p>{currentInfo.description}</p>
