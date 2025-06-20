@@ -38,7 +38,6 @@ export default class BigCard extends React.Component<BigCardProps, BigCardState>
     };
 
     handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        e.preventDefault();
         this.setState(prevState => ({ flipped: true }));
     };
 

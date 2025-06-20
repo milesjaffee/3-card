@@ -8,23 +8,42 @@ export default function Home() {
   const [drawn, setDrawn] = useState(false);
 
   const [tarotInfo, setTarotInfo] = useState({
+    back: {
     image: "/tarotback.jpg",
     alt: "Tarot card back",
     name: "Tarot Card",
     description: "A mystical tarot card drawn from the venerable Rider-Waite-Smith deck.",
-  });
+    },
+    front: {
+      image: "/playingcardback.jpg",
+      alt: "Card back",
+      name: "",
+      description: "",
+    }});
   const [magicInfo, setMagicInfo] = useState({
-    image: "/magicback.jpg",
+    back: {image: "/magicback.jpg",
     alt: "Magic card back",
     name: "Magic Card",
     description: "A random card from the many worlds of Magic: The Gathering. (Note: I am not associated with Wizards of the Coast. Data provided from Scryfall in accordance with Wizards' Fan Content Policy.)",
-  });
-  const [playingCardInfo, setPlayingCardInfo] = useState({
+  },
+  front: {
     image: "/playingcardback.jpg",
+    alt: "Card back",
+    name: "",
+    description: "",
+  }});
+  const [playingCardInfo, setPlayingCardInfo] = useState({
+    back: {image: "/playingcardback.jpg",
     alt: "Playing card back",
     name: "Playing Card",
     description: "A playing card drawn from a standard deck.",
-  });
+  },
+  front: {
+    image: "/playingcardback.jpg",
+    alt: "Card back",
+    name: "",
+    description: "",
+  }});
 
   const [currentInfo, setCurrentInfo] = useState({
     image: "/playingcardback.jpg",
@@ -77,10 +96,13 @@ export default function Home() {
         .then((response) => response.json())
         .then((data) => {
           setTarotInfo({
-            image: `https://www.sacred-texts.com/tarot/pkt/img/${data.cards[0].name_short}.jpg`,
-            alt: data.cards[0].name,
-            name: data.cards[0].name,
-            description: data.cards[0].desc + "Upright:" + data.cards[0].meaning_up + " // Reversed: " + data.cards[0].meaning_rev,
+            ...tarotInfo,
+            front: {
+              image: `https://www.sacred-texts.com/tarot/pkt/img/${data.cards[0].name_short}.jpg`,
+              alt: data.cards[0].name,
+              name: data.cards[0].name,
+              description: data.cards[0].desc + "\n\nUpright: " + data.cards[0].meaning_up + "\n\nReversed: " + data.cards[0].meaning_rev,
+            },
           });
           setBigCards((prevCards) => {
             const updatedCards = [...prevCards];
@@ -98,12 +120,12 @@ export default function Home() {
       fetch("https://api.scryfall.com/cards/random")
         .then((response) => response.json())
         .then((data) => {
-          setMagicInfo({
+          setMagicInfo({...magicInfo, front: {
             image: data.image_uris?.normal || data.image_uris?.large || data.image_uris?.png || "/magicback.jpg",
             alt: data.name,
             name: data.name,
-            description: data.oracle_text + " From the set "+ data.set_name + " (" + data.set.toUpperCase() + "), released " + data.released_at,
-          });
+            description: data.type_line + "\n" + data.oracle_text + "\n\nFrom the set "+ data.set_name + " (" + data.set.toUpperCase() + "), released " + data.released_at,
+          }});
           setBigCards((prevCards) => {
             const updatedCards = [...prevCards];
             const flipUrl = data.image_uris?.normal || data.image_uris?.large || data.image_uris?.png;
@@ -120,19 +142,20 @@ export default function Home() {
       fetch("https://deckofcardsapi.com/api/deck/new/draw/?count=1")
         .then((response) => response.json())
         .then((data) => {
-          setPlayingCardInfo({
+          const fixedName = data.cards[0].value.charAt(0) + data.cards[0].value.slice(1).toLowerCase() + " of " + data.cards[0].suit.charAt(0) + data.cards[0].suit.slice(1).toLowerCase();
+          setPlayingCardInfo({...playingCardInfo, front: {
             image: `https://deckofcardsapi.com/static/img/${data.cards[0].code}.png`,
-            alt: `${data.cards[0].value} of ${data.cards[0].suit}`,
-            name: `${data.cards[0].value} of ${data.cards[0].suit}`,
-            description: `The ${data.cards[0].value} of ${data.cards[0].suit}.`,
-          });
+            alt: `${fixedName}`,
+            name: `${fixedName}`,
+            description: `The ${fixedName}.`,
+          }});
           setBigCards((prevCards) => {
             const updatedCards = [...prevCards];
             const flipUrl = `https://deckofcardsapi.com/static/img/${data.cards[0].code}.png`;
             updatedCards[2] = {
               ...updatedCards[2],
               flipSrc: flipUrl,
-              flipAlt: `${data.cards[0].value} of ${data.cards[0].suit}`,
+              flipAlt: `${fixedName}`,
             };
             return updatedCards;
           });
@@ -172,21 +195,40 @@ export default function Home() {
         {drawn && <Box>
             <div className="flex flex-row items-center justify-center relative mb-10">
 
-              {bigCards.map((card, index) => (
-                <BigCard
-                  key={index}
-                  src={card.src}
-                  alt={card.alt}
-                  hoveredTransform={card.hoveredTransform}
-                  unhoveredTransform={card.unhoveredTransform}
-                  width={card.width}
-                  zIndex={card.zIndex}
-                  flipSrc={card.flipSrc}
-                  flipAlt={card.flipAlt}
-                  flipped={card.flipped}
+                {bigCards.map((card, index) => (
+                    <div 
+                    key={index}
+                    onMouseEnter={() => {
+                    if (index === 0) setCurrentInfo(bigCards[0].flipped ? tarotInfo.front : tarotInfo.back);
+                    else if (index === 1) setCurrentInfo(bigCards[1].flipped ? magicInfo.front : magicInfo.back);
+                    else if (index === 2) setCurrentInfo(bigCards[2].flipped ? playingCardInfo.front : playingCardInfo.back);
+                    }}
+                    onClick={() => {
+                    setBigCards((prevCards) => {
+                      const updatedCards = [...prevCards];
+                      updatedCards[index] = {
+                      ...updatedCards[index],
+                      flipped: !updatedCards[index].flipped,
+                      };
+                      return updatedCards;
+                    });
+                    }}
+                    >
+                      <BigCard
+                      key={index}
+                      src={card.src}
+                      alt={card.alt}
+                      hoveredTransform={card.hoveredTransform}
+                      unhoveredTransform={card.unhoveredTransform}
+                      width={card.width}
+                      zIndex={card.zIndex}
+                      flipSrc={card.flipSrc}
+                      flipAlt={card.flipAlt}
+                      flipped={card.flipped} />
+                    </div>
                   
-                />
-              ))}
+
+                ))}
 
             </div>
 
@@ -194,7 +236,7 @@ export default function Home() {
 
         </Box>
         } 
-          {
+          { //currently hovered card infobox
             drawn && currentInfo.name && <Box>
               <h1 className="text-4xl sm:text-4xl mt-10 font-bold text-center sm:text-left">{currentInfo.name}</h1>
               <div className="flex flex-row items-center justify-center relative">
@@ -202,13 +244,19 @@ export default function Home() {
                   src={currentInfo.image}
                   alt={currentInfo.alt}
                   hoveredTransform="translateY(-20px)"
-                  unhoveredTransform="translateY(0px)"
+                  unhoveredTransform=""
                   width="290"
-                  zIndex={2}
+                  zIndex={10}
                   flipSrc={currentInfo.image}
                   flipAlt={currentInfo.alt}
                   flipped={true}
                   
+                />
+                <Image 
+                src={currentInfo.image}
+                height="400"
+                width="290"
+                alt={currentInfo.alt}
                 />
 
                 <p>{currentInfo.description}</p>
