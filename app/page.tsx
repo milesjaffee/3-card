@@ -166,6 +166,8 @@ export default function Home() {
             alt: `${fixedName}`,
             name: `${fixedName}`,
             description: `The ${fixedName}.`,
+            desc2: "",
+            desc3: "",
           }});
           setBigCards((prevCards) => {
             const updatedCards = [...prevCards];
@@ -274,11 +276,11 @@ export default function Home() {
                   />
               
 
-                <div className="flex-col" style={{width: '100%'}}>
+                <div className="flex-col" style={{width: '115%'}}>
                   <p className="text-xl font-bold">{currentInfo.description}</p>
-                  <p> </p>
+                  <p>{" "}</p>
                   {currentInfo.desc2 && <p className="text-xl">{currentInfo.desc2}</p>}
-                  <p> </p>
+                  <p>{" "}</p>
                   {currentInfo.desc3 && <p className="text-xl">{currentInfo.desc3}</p>}
 
                 </div>
