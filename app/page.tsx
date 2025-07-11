@@ -184,55 +184,6 @@ export default function Home() {
       
     } else {
       //Reset the cards to their backs
-      setTarotInfo({
-        back: {
-        image: "/tarotback.jpg",
-        alt: "Tarot card back",
-        name: "Tarot Card",
-        description: "A mystical tarot card drawn from the venerable Rider-Waite-Smith deck.",
-        desc2: "",
-        desc3: "",
-        },
-        front: {
-          image: "/playingcardback.jpg",
-          alt: "Card back",
-          name: "",
-          description: "",
-          desc2: "",
-          desc3: "",
-        }});
-      setMagicInfo({
-        back: {image: "/magicback.jpg",
-        alt: "Magic card back",
-        name: "Magic Card",
-        description: "A random card from the many worlds of Magic: The Gathering.",
-        desc2: "Note: I am not associated with Wizards of the Coast. Data provided from Scryfall in accordance with Wizards' Fan Content Policy.",
-        desc3: "",
-      },
-      front: {
-        image: "/playingcardback.jpg",
-        alt: "Card back",
-        name: "",
-        description: "",
-        desc2: "",
-        desc3: "",
-      }});
-      setPlayingCardInfo({
-        back: {image: "/playingcardback.jpg",
-        alt: "Playing card back",
-        name: "Playing Card",
-        description: "A playing card drawn from a standard deck.",
-        desc2: "",
-        desc3: "",
-      },
-      front: {
-        image: "/playingcardback.jpg",
-        alt: "Card back",
-        name: "",
-        description: "",
-        desc2: "",
-        desc3: "",
-      }});
       setCurrentInfo({
         image: "/playingcardback.jpg",
         alt: "Card back",
@@ -241,6 +192,44 @@ export default function Home() {
         desc2: "",
         desc3: "",
       });
+      setBigCards(
+        [
+          {
+            src: "/tarotback.jpg",
+            alt: "Tarot Card",
+            hoveredTransform: "rotate(-15deg) translateY(-20px)",
+            unhoveredTransform: "rotate(-15deg)",
+            width: "245px",
+            zIndex: 0,
+            flipSrc: "",
+            flipAlt: "",
+            flipped: false,
+          },
+          {
+            src: "/magicback.jpg",
+            alt: "Magic Card",
+            hoveredTransform: "translateY(-55px)",
+            unhoveredTransform: "translateY(-35px)",
+            width: "293px",
+            zIndex: 1,
+            flipSrc: "",
+            flipAlt: "",
+            flipped: false,
+          },
+          {
+            src: "/playingcardback.jpg",
+            alt: "Playing Card",
+            hoveredTransform: "rotate(15deg) translateY(-20px)",
+            unhoveredTransform: "rotate(15deg)",
+            width: "285px",
+            zIndex: 2,
+            flipSrc: "",
+            flipAlt: "",
+            flipped: false,
+          },
+        ]
+      );
+
 
     }
     setDrawn(!drawn);
@@ -288,7 +277,7 @@ export default function Home() {
                       const updatedCards = [...prevCards];
                       updatedCards[index] = {
                       ...updatedCards[index],
-                      flipped: !updatedCards[index].flipped,
+                      flipped: true,
                       };
                       return updatedCards;
                     });
